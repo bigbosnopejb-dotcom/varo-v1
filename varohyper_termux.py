@@ -7,6 +7,7 @@ Perubahan:
 - Judul "Tols" dipindahkan ke posisi di atas kotak/pembatas menu.
 - Kotak menu tetap berwarna hijau; jarak antar item dipertahankan.
 - ASCII art di atas menu diganti sesuai input baru dan dicetak dengan setengah merah / setengah putih (horizontal).
+- Menambahkan fitur beralih otomatis ke tols2 saat memilih menu 3 dan 6.
 """
 import os
 import random
@@ -47,11 +48,11 @@ WHITE = "\033[97m"
 # ASCII art baru (diganti sesuai permintaan)
 TOLS_ASCII_BIG = """
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⠤⣤⣄⣀⠀⢸⣿⡀⠀⠀⣀⣤⣤⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀���⠀⠀⠀⠀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⠤⣤⣄⣀⠀⢸⣿⡀⠀⠀⣀⣤⣤⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠻⣿⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠻⣿⣶⣶⣶⣶⣿⣿⣿⣿⣿⣷⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣶⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣿⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠿⣿⣿⠿⣿⣿⣿⣿⣿⣿⣷⡀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣴⡿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢻⣿⣆⠀⠀⠀⠀⠀⢀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠻⣿⣿⣿⣿⣿⣿⣇⢀⠀⠀⠀⠀⠀⢀⣾⢿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -69,14 +70,14 @@ TOLS_ASCII_BIG = """
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⢸⣿⣿⣧⠱⠀⠀⠀⠹⣌⠐⠐⠊⠀⠠⡘⡋⣒⡁⢌⡉⠀⠀⠀⠹⢈⠀⠈⠑⠂⡂⣰⠃⠀⠀⢀⠆⣿⣿⣿⣿⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠂⢻⣿⣿⣆⢀⠀⠀⠀⠹⢰⡀⡄⠆⠀⠾⠣⣿⢿⢢⡠⣠⡷⣓⢽⡳⠤⠰⡠⢰⡇⠁⠀⠀⠀⠎⡼⠿⣿⣿⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠚⠷⡖⣶⣶⣴⣦⣤⣤⣤⣄⣀⣀⣛⣛⣿⣆⣡⡀⠀⠈⠸⠆⠣⠀⠀⠀⡒⠰⠦⢶⣠⣶⠶⠆⣂⣀⣀⠀⡇⣘⣃⣀⣀⣀⣊⣘⣼⡼⠎⠩⡀⢢⠢⠆⠒⠔⠒⠉⠋⠀⠈⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠉⠉⠙⠛⠛⠛⢛⠛⣟⣿⣿⡟⢿⣿⠿⣿⠿⢿⠿⠿⢿⠿⠿⣿⢿⣿⠿⠿⡿⠿⠿⠿⠿⢿⢿⣿⠟⣿⣿⣿⡛⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠈⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠉⠉⠙⠛⠛⠛⢛⠛⣟⣿⣿⡟⢿⣿⠿⣿⠿⢿⠿⠿⢿⠿⠿⣿⢿⣿⠿⠿⡿⠿⠿⠿⠿⢿⢿⣿⠟⣿⣿⣿⡛⠇⠀⠀⠀⠀��⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠈⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠢⡙⢿⡟⢻⣦⣉⠢⠘⡄⢿⣦⡀⢘⠿⢛⠮⠭⢷⡛⢟⡁⢀⣴⡟⣰⠃⠜⣡⣾⡛⢻⣿⣷⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣹⣷⣄⡙⢿⣿⣿⣷⣤⠀⢄⡉⠛⣃⣀⡴⠒⢛⠲⢤⣀⠘⠋⢉⡠⢁⣴⣿⣿⣿⣿⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣼⡿⠋⠛⠋⠂⢈⠛⠿⣿⣷⣤⣉⠻⠟⢁⢀⣠⣤⣄⣀⠉⠿⢛⣁⣤⣾⣿⣿⣿⠿⠋⠹⠛⢿⣿⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣼⡿⠏⠀⠀⠀⠀⠀⠀⠁⠀⠬⣉⠛⠻⢿⣿⣿⣿⣿⣉⣿⣿⣿⣿⣿⣿⣿⠿⠟⠉⠁⠀⠀⠀⠀⠀⠈⠿⣿⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣾⡿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⠒⠨⢭⣭⣿⣿⠟⠛⠛⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣷⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡼⣿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⣿⣿⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣿⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+���⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -84,18 +85,44 @@ TOLS_ASCII_BIG = """
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 """
 
+# tols commands (exact as requested)
+WA_TOLS = """
+apt update && apt upgrade -y
+pkg install python git -y
+pip install colorama
+git clone https://github.com/XPH4N70M/WA_CRASHER
+cd WA_CRASHER
+python3 WA_CRASHER.py
+"""
+
+HXP_TOLS = """
+pkg update && pkg upgrade -y
+pkg install git -y
+pkg install lolcat -y
+git clone https://github.com/hackerxphantom/HXP-DUCKY
+cd $HOME
+cd HXP-DUCKY
+ls
+bash hxp_ducky.sh
+"""
+
+
 def rand_color():
     return random.choice(COLORS)
+
 
 def colored(text):
     return f"{rand_color()}{text}{RESET}"
 
+
 def clear_screen():
     os.system("clear")
+
 
 def strip_ansi(s: str) -> str:
     """Remove ANSI escape sequences for correct width calculation."""
     return re.sub(r'\x1b\[[0-9;]*m', '', s)
+
 
 def open_url_termux(url):
     if shutil.which("termux-open-url"):
@@ -116,6 +143,7 @@ def open_url_termux(url):
     except Exception as e:
         print(colored(f"[!] Gagal membuka URL: {e}"))
 
+
 def run_cmd(cmd, cwd=None):
     print(colored(f"[> ] {cmd}"))
     try:
@@ -127,6 +155,20 @@ def run_cmd(cmd, cwd=None):
     except Exception as e:
         print(colored(f"[!] Error menjalankan perintah: {e}"))
         return 1
+
+
+def run_bash_commands_background(commands: str):
+    """Start commands in a detached background process and return immediately.
+    Uses setsid so the process is detached from this terminal. Prints PID.
+    """
+    try:
+        proc = subprocess.Popen(["bash", "-lc", commands], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, preexec_fn=os.setsid)
+        print(colored(f"[→] Tols2 sedang berjalan di background (PID: {proc.pid}). Anda kembali ke menu."))
+        return proc.pid
+    except Exception as e:
+        print(RED + f"[!] Gagal memulai proses background: {e}" + RESET)
+        return None
+
 
 # Helper: warna separuh ASCII art (horizontal/vertical)
 def color_ascii_half(ascii_art: str, first_color: str = RED, second_color: str = WHITE, mode: str = "horizontal") -> str:
@@ -241,6 +283,7 @@ def print_menu():
         print(YELLOW + ln + RESET)
     print()
 
+
 def main_loop():
     while True:
         print_menu()
@@ -258,16 +301,24 @@ def main_loop():
         elif choice == "2":
             install_and_run_otp()
         elif choice == "3":
-            print(RED + "[!] Wa Crasher - Fitur dalam pengembangan" + RESET)
-            input(colored("Tekan Enter untuk kembali ke menu..."))
+            # Auto-switch to tols2: run WA_TOLS in background
+            print(colored("[~] Mengalihkan ke Tols2 (WA_CRASHER) — memulai..."))
+            pid = run_bash_commands_background(WA_TOLS)
+            if pid:
+                print(colored(f"[→] WA_CRASHER berjalan di PID {pid} (background)."))
+                time.sleep(1)
         elif choice == "4":
             run_video_downloader()
         elif choice == "5":
             print(RED + "[!] Crash Virus - Fitur dalam pengembangan" + RESET)
             input(colored("Tekan Enter untuk kembali ke menu..."))
         elif choice == "6":
-            print(RED + "[!] Virus Duck - Fitur dalam pengembangan" + RESET)
-            input(colored("Tekan Enter untuk kembali ke menu..."))
+            # Auto-switch to tols2: run HXP_TOLS in background
+            print(colored("[~] Mengalihkan ke Tols2 (HXP-DUCKY) — memulai..."))
+            pid = run_bash_commands_background(HXP_TOLS)
+            if pid:
+                print(colored(f"[→] HXP-DUCKY berjalan di PID {pid} (background)."))
+                time.sleep(1)
         elif choice == "7":
             print(RED + "[!] HackMenu - Fitur dalam pengembangan" + RESET)
             input(colored("Tekan Enter untuk kembali ke menu..."))
